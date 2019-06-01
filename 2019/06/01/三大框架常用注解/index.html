@@ -6,19 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>JinWenqi</title>
+  <title>三大框架常用注解 | JinWenqi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="�򵥿�����">
+  <meta name="description" content="Spring部分 1.声明bean的注解 @Component 组件，没有明确的角色 @Service 在业务逻辑层使用（service层） @Repository 在数据访问层使用（dao层） @Controller 在展现层使用，控制器的声明（C） 2.注入bean的注解 @Autowired：由Spring提供 @Inject：由JSR-330提供 @Resource：由JSR-250提供">
 <meta name="keywords" content="java">
-<meta property="og:type" content="website">
-<meta property="og:title" content="JinWenqi">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三大框架常用注解">
+<meta property="og:url" content="http://yoursite.com/2019/06/01/三大框架常用注解/index.html">
 <meta property="og:site_name" content="JinWenqi">
-<meta property="og:description" content="�򵥿�����">
+<meta property="og:description" content="Spring部分 1.声明bean的注解 @Component 组件，没有明确的角色 @Service 在业务逻辑层使用（service层） @Repository 在数据访问层使用（dao层） @Controller 在展现层使用，控制器的声明（C） 2.注入bean的注解 @Autowired：由Spring提供 @Inject：由JSR-330提供 @Resource：由JSR-250提供">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-06-01T15:01:58.588Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JinWenqi">
-<meta name="twitter:description" content="�򵥿�����">
+<meta name="twitter:title" content="三大框架常用注解">
+<meta name="twitter:description" content="Spring部分 1.声明bean的注解 @Component 组件，没有明确的角色 @Service 在业务逻辑层使用（service层） @Repository 在数据访问层使用（dao层） @Controller 在展现层使用，控制器的声明（C） 2.注入bean的注解 @Autowired：由Spring提供 @Inject：由JSR-330提供 @Resource：由JSR-250提供">
   
     <link rel="alternative" href="/atom.xml" title="JinWenqi" type="application/atom+xml">
   
@@ -47,7 +48,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src class="1.jpg">
+			<img src class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">JinWenqi</a></h1>
@@ -70,7 +71,7 @@
     			
             
     			
-    			<a q-on="click: openSlider(e, 'friends')" href="www.jianshu.com">简书</a>
+    			<a q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
     			
             
     			
@@ -154,32 +155,114 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-My-New-Post" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-三大框架常用注解" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/01/My-New-Post/">My New Post</a>
+    <h1 class="article-title" itemprop="name">
+      三大框架常用注解
     </h1>
   
 
         
-        <a href="/2019/06/01/My-New-Post/" class="archive-article-date">
-  	<time datetime="2019-06-01T12:32:59.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
+        <a href="/2019/06/01/三大框架常用注解/" class="archive-article-date">
+  	<time datetime="2019-06-01T15:01:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>春眠不觉晓<br>处处闻啼鸟<br>夜来风雨声<br>花落知多少</p>
+        <p>Spring部分</p>
+<p>1.声明bean的注解</p>
+<p>@Component 组件，没有明确的角色</p>
+<p>@Service 在业务逻辑层使用（service层）</p>
+<p>@Repository 在数据访问层使用（dao层）</p>
+<p>@Controller 在展现层使用，控制器的声明（C）</p>
+<p>2.注入bean的注解</p>
+<p>@Autowired：由Spring提供</p>
+<p>@Inject：由JSR-330提供</p>
+<p>@Resource：由JSR-250提供</p>
+<p>都可以注解在set方法和属性上，推荐注解在属性上（一目了然，少写代码）。</p>
+<p>3.java配置类相关注解</p>
+<p>@Configuration 声明当前类为配置类，相当于xml形式的Spring配置（类上）</p>
+<p>@Bean 注解在方法上，声明当前方法的返回值为一个bean，替代xml中的方式（方法上）</p>
+<p>@Configuration 声明当前类为配置类，其中内部组合了@Component注解，表明这个类是一个bean（类上）</p>
+<p>@ComponentScan 用于对Component进行扫描，相当于xml中的（类上）</p>
+<p>@WishlyConfiguration 为@Configuration与@ComponentScan的组合注解，可以替代这两个注解</p>
+<p>4.切面（AOP）相关注解</p>
+<p>Spring支持AspectJ的注解式切面编程。</p>
+<p>@Aspect 声明一个切面（类上） 使用@After、@Before、@Around定义建言（advice），可直接将拦截规则（切点）作为参数。</p>
+<p>@After 在方法执行之后执行（方法上） @Before 在方法执行之前执行（方法上） @Around 在方法执行之前与之后执行（方法上）</p>
+<p>@PointCut 声明切点 在java配置类中使用@EnableAspectJAutoProxy注解开启Spring对AspectJ代理的支持（类上）</p>
+<p>5.@Bean的属性支持</p>
+<p>@Scope 设置Spring容器如何新建Bean实例（方法上，得有@Bean） 其设置类型包括：</p>
+<p>Singleton （单例,一个Spring容器中只有一个bean实例，默认模式）, Protetype （每次调用新建一个bean）, Request （web项目中，给每个http request新建一个bean）, Session （web项目中，给每个http session新建一个bean）, GlobalSession（给每一个 global http session新建一个Bean实例）</p>
+<p>@StepScope 在Spring Batch中还有涉及</p>
+<p>@PostConstruct 由JSR-250提供，在构造函数执行完之后执行，等价于xml配置文件中bean的initMethod</p>
+<p>@PreDestory 由JSR-250提供，在Bean销毁之前执行，等价于xml配置文件中bean的destroyMethod</p>
+<p>7.环境切换</p>
+<p>@Profile 通过设定Environment的ActiveProfiles来设定当前context需要使用的配置环境。（类或方法上）</p>
+<p>@Conditional Spring4中可以使用此注解定义条件话的bean，通过实现Condition接口，并重写matches方法，从而决定该bean是否被实例化。（方法上）</p>
+<p>8.异步相关</p>
+<p>@EnableAsync 配置类中，通过此注解开启对异步任务的支持，叙事性AsyncConfigurer接口（类上）</p>
+<p>@Async 在实际执行的bean方法使用该注解来申明其是一个异步任务（方法上或类上所有的方法都将异步，需要@EnableAsync开启异步任务）</p>
+<p>9.定时任务相关</p>
+<p>@EnableScheduling 在配置类上使用，开启计划任务的支持（类上）</p>
+<p>@Scheduled 来申明这是一个任务，包括cron,fixDelay,fixRate等类型（方法上，需先开启计划任务的支持）</p>
+<p>10.@Enable*注解说明</p>
+<p>这些注解主要用来开启对xxx的支持。@EnableAspectJAutoProxy 开启对AspectJ自动代理的支持</p>
+<p>@EnableAsync 开启异步方法的支持</p>
+<p>@EnableScheduling 开启计划任务的支持</p>
+<p>@EnableWebMvc 开启Web MVC的配置支持</p>
+<p>@EnableConfigurationProperties 开启对@ConfigurationProperties注解配置Bean的支持</p>
+<p>@EnableJpaRepositories 开启对SpringData JPA Repository的支持</p>
+<p>@EnableTransactionManagement 开启注解式事务的支持</p>
+<p>@EnableTransactionManagement 开启注解式事务的支持</p>
+<p>@EnableCaching 开启注解式的缓存支持</p>
+<p>11.测试相关注解</p>
+<p>@RunWith 运行器，Spring中通常用于对JUnit的支持</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)</p>
+<p>@ContextConfiguration 用来加载配置ApplicationContext，其中classes属性用来加载配置类</p>
+<p>@ContextConfiguration(classes={TestConfig.class})</p>
+<p>SpringMVC部分</p>
+<p>@EnableWebMvc 在配置类中开启Web MVC的配置支持，如一些ViewResolver或者MessageConverter等，若无此句，重写WebMvcConfigurerAdapter方法（用于对SpringMVC的配置）。</p>
+<p>@Controller 声明该类为SpringMVC中的Controller</p>
+<p>@RequestMapping 用于映射Web请求，包括访问路径和参数（类或方法上）</p>
+<p>@ResponseBody 支持将返回值放在response内，而不是一个页面，通常用户返回json数据（返回值旁或方法上）</p>
+<p>@RequestBody 允许request的参数在request体中，而不是在直接连接在地址后面。（放在参数前）</p>
+<p>@PathVariable 用于接收路径参数，比如@RequestMapping(“/hello/{name}”)申明的路径，将注解放在参数中前，即可获取该值，通常作为Restful的接口实现方法。</p>
+<p>@RestController 该注解为一个组合注解，相当于@Controller和@ResponseBody的组合，注解在类上，意味着，该Controller的所有方法都默认加上了@ResponseBody。</p>
+<p>@ControllerAdvice 通过该注解，我们可以将对于控制器的全局配置放置在同一个位置，注解了@Controller的类的方法可使用@ExceptionHandler、@InitBinder、@ModelAttribute注解到方法上， 这对所有注解了@RequestMapping的控制器内的方法有效。</p>
+<p>@ExceptionHandler 用于全局处理控制器里的异常</p>
+<p>@InitBinder 用来设置WebDataBinder，WebDataBinder用来自动绑定前台请求参数到Model中。</p>
+<p>@ModelAttribute 本来的作用是绑定键值对到Model里，在@ControllerAdvice中是让全局的@RequestMapping都能获得在此处设置的键值对。 </p>
 
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -188,16 +271,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/01/My-New-Post/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/06/01/三大框架常用注解/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/01/My-New-Post/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">My New Post</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -217,71 +359,14 @@
 
 
 
-
   
-    <article id="post-my-first-blog" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/01/my-first-blog/">my-first-blog</a>
-    </h1>
   
 
-        
-        <a href="/2019/06/01/my-first-blog/" class="archive-article-date">
-  	<time datetime="2019-06-01T11:02:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>白日依山尽<br>黄河入海流<br>欲穷千里目<br>更上一层楼</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/01/my-first-blog/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
+  
 
   
+
   
 
 
@@ -304,8 +389,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
