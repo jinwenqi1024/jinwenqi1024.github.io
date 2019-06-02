@@ -15,8 +15,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="java developer,##什么是代理代理是设计模式的一种，代理类为委托类提供消息预处理，消息转发，事后消息处理等功能。Java中的代理分为三种角色：
-代理类(ProxySubject)委托类(RealSubject)接口,"> 
+    <meta name="description" content="java developer,什么是代理代理是设计模式的一种，代理类为委托类提供消息预处理，消息转发，事后消息处理等功能。Java中的代理分为三种角色：
+代理类(ProxySubject)委托类(RealSubject)接口(S,"> 
     <meta name="author" content="JinWenqi"> 
     <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -76,9 +76,8 @@
 
         </div>
         <div class="content markdown">
-            <p>##什么是代理<br>代理是设计模式的一种，代理类为委托类提供消息预处理，消息转发，事后消息处理等功能。Java中的代理分为三种角色：</p>
+            <p>什么是代理<br>代理是设计模式的一种，代理类为委托类提供消息预处理，消息转发，事后消息处理等功能。Java中的代理分为三种角色：</p>
 <p>代理类(ProxySubject)<br>委托类(RealSubject)<br>接口(Subject)</p>
-<p>三者关系可以表示如下图:</p>
 <p>代理模式</p>
 <p>Java中的代理按照代理类生成时机不同又分为静态代理和动态代理。静态代理代理类在编译期就生成，而动态代理代理类则是在Java运行时动态生成。<br>静态代理<br>Java中的静态代理要求代理类(ProxySubject)和委托类(RealSubject)都实现同一个接口(Subject)。静态代理中代理类在编译期就已经确定，而动态代理则是JVM运行时动态生成，静态代理的效率相对动态代理来说相对高一些，但是静态代理代码冗余大，一单需要修改接口，代理类和委托类都需要修改。<br>举个例子：<br>接口(Subject)：<br>interface HelloService {<br>    void sayHello();<br>}</p>
 <p>委托类：<br>class HelloServiceImpl implements HelloService {<br>    @Override<br>    public void sayHello() {<br>        System.out.println(“Hello World!”);<br>    }<br>}</p>
