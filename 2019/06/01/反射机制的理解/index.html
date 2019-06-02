@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>反射机制的理解 - JinWenqi</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="java developer,Reflection 是 Java 程序开发语言的重要特征之一，是学习Java必须知识点。
+Java反射机制主要提供了以下功能：在运行时构造一个类的对象；判断一个类所具有的成员变量和方法；调用一个对,"> 
+    <meta name="author" content="JinWenqi"> 
+    <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">JinWenqi</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">反射机制的理解</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">反射机制的理解</h1>
+        <div class="stuff">
+            <span>六月 01, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>Reflection 是 Java 程序开发语言的重要特征之一，是学习Java必须知识点。</p>
+<p>Java反射机制主要提供了以下功能：在运行时构造一个类的对象；判断一个类所具有的成员变量和方法；调用一个对象的方法；生成动态代理。反射最大的应用就是框架</p>
+<p>Java.lang.Class和Java.lang.reflect包下的API，用于表示或者处理当前JVM中的类，接口和对象。</p>
+<p>Java反射的主要功能：</p>
+<p>确定一个对象的类<br>取出类的modifiers,数据成员,方法,构造器,和超类.<br>找出某个接口里定义的常量和方法说明.<br>创建一个类实例,这个实例在运行时刻才有名字(运行时间才生成的对象).<br>取得和设定对象数据成员的值,如果数据成员名是运行时刻确定的也能做到.<br>在运行时刻调用动态对象的方法.<br>创建数组,数组大小和类型在运行时刻才确定,也能更改数组成员的值.</p>
+<p>Class类是Java反射的基础，Class类表示正在运行的java应用程序中的类和接口。Class只有私有的构造函数。Class类在加载类时由Java虚拟机以及调用类加载器中的 defineClass方法自动创建的。只在内存中存在一份加载类的Class类。<br>三种方式得到某个Java类的Class类，以java.lang.String为例：</p>
+<p>String s = “aaa”;<br>Class cls1 = s.getClass();<br>Class cls2 = String.class;<br>Class cls3 = Class.forName(“java.lang.String”);<br>if (cls1 == cls2) {<br>System.out.println(“cls1 == cls2”);<br>}
+if (cls2 == cls3) {<br>System.out.println(“cls2 == cls3”);<br>}
+为什么他们三个会==呢？因为他们描述的都是同一个类java.lang.String类。</p>
+<p>Class类还有很多方法，配合java.lang.reflect包下的一些API可以实现更多的功能。</p>
+<p>一个javabean</p>
+<p>package org.legend.reflect;</p>
+<p>public class UserInfo {</p>
+<p>private String userName;</p>
+<p>private Integer age;</p>
+<p>public String school;</p>
+<p>public UserInfo() {</p>
+<p>}</p>
+<p>public UserInfo(String name, Integer age, String shool) {</p>
+<p>this.userName = name;</p>
+<p>this.age = age;</p>
+<p>this.school = shool;</p>
+<p>}</p>
+<p>public UserInfo(String name, Integer age) {</p>
+<p>this.userName = name;</p>
+<p>this.age = age;</p>
+<p>}</p>
+<p>public String getInfo(String n, Integer i) {</p>
+<p>return “success” + n + i;</p>
+<p>}</p>
+<p>public void getMyInfo(String mName, String mBirth, Integer age) {</p>
+<p>System.out.println(“我是一个来自” + mBirth + “的名叫：” + mName + “的” + age</p>
+<p>“岁的选手”);<br>}</p>
+<p>public Integer getAge() {</p>
+<p>return age;</p>
+<p>}</p>
+<p>public void setAge(Integer age) {</p>
+<p>this.age = age;</p>
+<p>}</p>
+<p>public String getUserName() {</p>
+<p>return userName;</p>
+<p>}</p>
+<p>public void setUserName(String userName) {</p>
+<p>this.userName = userName;</p>
+<p>}</p>
+<p>}</p>
+<p>一个操作类:</p>
+<p>package org.legend.reflect;</p>
+<p>import java.lang.reflect.Constructor;</p>
+<p>import java.lang.reflect.Field;</p>
+<p>import java.lang.reflect.InvocationTargetException;</p>
+<p>import java.lang.reflect.Method;</p>
+<p>import java.lang.reflect.Modifier;</p>
+<p>/**</p>
+<p>反射操作类<br>*/</p>
+<p>public class GetMyInfo {</p>
+<p>public static void main(String[] args) throws ClassNotFoundException, SecurityException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {</p>
+<p>Class mclass = Class.forName(“org.legend.reflect.UserInfo”);</p>
+<p>System.out.println(“————输出类名———————–”);</p>
+<p>System.out.println(mclass.getName());</p>
+<p>System.out.println(mclass.getSimpleName()); //基础类的简称</p>
+<p>//获取属性(字段)</p>
+<p>System.out.println(“————输出所有属性——————–”);</p>
+<p>Field[] fileds=mclass.getDeclaredFields(); //得到所有的字段，包括公共，保护，默认（包）和私有变量，但不包括继承的字段。</p>
+<p>//Field[] fileds = mclass.getFields(); //得到所有的公共字段。</p>
+<p>for(Field field:fileds)</p>
+<p>{</p>
+<p>String fieldName = field.getName(); //属性名称</p>
+<p>int fieldFangWen = field.getModifiers(); //属性访问权限修饰符</p>
+<p>Class fieldType = field.getType(); //属性类型</p>
+<p>System.out.println(Modifier.toString(fieldFangWen)+” “+fieldType.getSimpleName()+” “+fieldName);</p>
+<p>}</p>
+<p>//获取方法</p>
+<p>System.out.println(“————输出所有方法——————–”);</p>
+<p>Method [] methods=mclass.getDeclaredMethods();</p>
+<p>//Method[] medthods = mclass.getMethods();</p>
+<p>for(Method method:methods)</p>
+<p>{</p>
+<p>String methodName = method.getName(); //方法名称</p>
+<p>int methodFangWen = method.getModifiers(); //访问修饰符</p>
+<p>Class methodRetrunType = method.getReturnType();//返回类型</p>
+<p>Class [] methodParameter = method.getParameterTypes();//方法的参数列表</p>
+<p>System.out.print(Modifier.toString(methodFangWen)+” “+methodRetrunType.getSimpleName()+” “+methodName+”(“);</p>
+<p>for(int k=0;k&lt;methodParameter.length;k++)</p>
+<p>{</p>
+<p>String parameterName=methodParameter[k].getSimpleName();</p>
+<p>if(k!=methodParameter.length-1)</p>
+<p>{</p>
+<p>System.out.print(parameterName+” arg”+k+”,”);</p>
+<p>}</p>
+<p>else</p>
+<p>System.out.print(parameterName+” arg”+k);</p>
+<p>}</p>
+<p>System.out.println(“);”);</p>
+<p>}</p>
+<p>//获取构造</p>
+<p>System.out.println(“————输出所有构造器——————–”);</p>
+<p>Constructor[]constructors = mclass.getConstructors();</p>
+<p>for(Constructor constructor:constructors)</p>
+<p>{</p>
+<p>String constructorName = constructor.getName();</p>
+<p>Class[] constructorParameter = constructor.getParameterTypes();</p>
+<p>System.out.print(mclass.getSimpleName()+” “+constructorName.substring(constructorName.lastIndexOf(“.”)+1, constructorName.length())+”(“);</p>
+<p>for(int h=0;h&lt;constructorParameter.length;h++)</p>
+<p>{</p>
+<p>String parameterName = constructorParameter[h].getSimpleName();</p>
+<p>if(h!=constructorParameter.length-1)</p>
+<p>System.out.print(parameterName+” arg”+h+”,”);</p>
+<p>else</p>
+<p>System.out.print(parameterName+” arg”+h);</p>
+<p>}</p>
+<p>System.out.println(“);”);</p>
+<p>}</p>
+<p>//如何执行指定的方法</p>
+<p>System.out.println(“————反射执行方法——————–”);</p>
+<p>String name =”getMyInfo”;</p>
+<p>Class[] parameterTypes = new Class[3];</p>
+<p>parameterTypes[0]= String.class;</p>
+<p>parameterTypes[1]= String.class;</p>
+<p>parameterTypes[2]= Integer.class;</p>
+<p>Method me = mclass.getDeclaredMethod(name, parameterTypes);</p>
+<p>Object obj = mclass.newInstance();</p>
+<p>Object[] arg = new Object[3];</p>
+<p>arg[0]=”范晶晶”;</p>
+<p>arg[1]=”AAA风景区”;</p>
+<p>arg[2]=new Integer(18);</p>
+<p>me.invoke(obj, arg);</p>
+<p>}</p>
+<p>}</p>
+<p>反射的应用很多，很多框架都有用到</p>
+<p>spring 的 ioc/di 也是反射….<br>javaBean和jsp之间调用也是反射….<br>struts的 FormBean 和页面之间…也是通过反射调用….<br>JDBC 的 classForName()也是反射…..<br>hibernate的 find(Class clazz) 也是反射….</p>
+<p>反射还有一个不得不说的问题，就是性能问题，大量使用反射系统性能大打折扣。怎么使用使你的系统达到最优就看你系统架构和综合使用问题啦，这里就不多说了。。。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="http://link.hhtjim.com/163/5146554.mp3"></li>
+                    
+                        <li title="1" data-url="http://link.hhtjim.com/qq/001faIUs4M2zna.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
