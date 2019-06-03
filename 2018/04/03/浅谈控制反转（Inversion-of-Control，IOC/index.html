@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>浅谈控制反转（Inversion of Control，IOC) - JinWenqi</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="java developer,我们首先先来了解一下控制二字，也就是在控制“正”转的情况下，在任何一个有请求作用的系统当中，至少需要有两个类互相配合工作，在一个入口类下使用new关键字创建另一个类的对象实例，这就好比在面向对象编程,"> 
+    <meta name="author" content="JinWenqi"> 
+    <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">JinWenqi</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">浅谈控制反转（Inversion of Control，IOC)</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">浅谈控制反转（Inversion of Control，IOC)</h1>
+        <div class="stuff">
+            <span>四月 03, 2018</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>我们首先先来了解一下控制二字，也就是在控制“正”转的情况下，在任何一个有请求作用的系统当中，至少需要有两个类互相配合工作，在一个入口类下使用new关键字创建另一个类的对象实例，这就好比在面向对象编程的思想下，“我“充当一个入口类，在这个入口类中，我每次吃饭的时候都要买一双一次性筷子（每一次使用都要new一次），在这样的关系下，是”我“（即调用者）每次都要”主动“去买一次性筷子（另一个类），我对筷子说你老老实实的过来我的手上，是我控制了筷子，那好，在这种控制正转的关系下，放在现实生活当中，肯定是不现实的，而且人是懒惰的，他总会去创造出更加方便自己生活的想法，更确切的做法是，买一双普通的筷子（非一次性），把他放在一个容器当中（在Spring中叫做IOC容器），你需要使用的时候就对容器说：IOC我想要用筷子（向容器发出请求），接着筷子就会”注入“到的手上，而在这个过程当中，你不再是控制方，反而演变成一名请求者（虽然本身还是调用者），依赖于容器给予你资源，控制权坐落到了容器身上，于是这就是人们俗称的控制反转。</p>
+<p>　初涉依赖注入（Dependency Injection）　　<br>　　同样接着上面的例子，在控制反转的统一下，筷子是怎么来到我的手上（即我们是如何获得请求的类），这就是一个依赖注入的过程。</p>
+<p>　再谈IOC与DI<br>　　设计原则中好莱坞原则描述到，“别找我们，我们找你”，百度百科上对这点描述是“不要给我们打电话，我们会给你打电话(don‘t call us, we‘ll call you)”这是著名的好莱坞原则。在好莱坞，把简历递交给演艺公司后就只有回家等待。由演艺公司对整个娱乐项的完全控制，演员只能被动式的接受公司的差使,在需要的环节中，完成自己的演出。这一点完美的提现了在IOC身上，IOC所注重的是设计思想上，从一个常规的创建对象的做法，即new一个对象，转变成向IOC容器递交”简历“，被动的等待IOC容器返回资源给你。控制反转即指的是”演艺公司控制演员“，而说到依赖，则是“演员需要公司混饭”，我们所需求的对象，需要依赖容器来获得，这个过程即是依赖注入。本质上IOC和DI是同一思想下不同维度的表现。</p>
+<p>　代码实现<br>　　既然说在控制反转中获取资源的过程叫做依赖注入，那么这里代码实现也是专注于依赖注入。依赖注入有3种方式，分别为构造注入，设置注入，接口注入。</p>
+<p>　　1.接口注入：在接口中定义要注入的信息，并通过接口来完成注入。（Spring不支持这种注入方式–不支持的原因是–Spring声称其是非入侵式的《离开这个框架也能活》，如果使用接口注入的话，就违背了这一原则），这里不做代码实现讲解。</p>
+<p>　　2.setter注入</p>
+<p>　　我们先脱离Spring来实现setter注入,分两步，第一步我们先看看在常规的做法下类之间的关系，第二步使用IOC来进行设计类，对比一下之间的差别。</p>
+<p>　　在常规的做法下</p>
+<p>复制代码<br>public class UserDao{<br>   public void addUser(String username)<br>{
+   System.out.println(“添加用户：”+username);<br>}  
+}<br>复制代码<br>复制代码<br>public class UserMessage {<br>   String username=”demo”;<br>   UserDao userDao;<br>   public UserMessage(){<br>   userDao=new UserDao();<br>}      
+   public void addUser(){<br>  userDao.addUser(username);<br>}  
+}<br>复制代码
+　　</p>
+<p>public class test{<br>  UserMessage userMessage=new UserMessage();<br>  userMessage.addUser();<br>}
+　　这上面的代码存在一个缺陷，由于在UserMessage内部创建了UseDao对象，这就造成了两个类之间的耦合度较高，当项目经理想要用另外一个Dao类的方法来实现addUser的时候，这个时候我就需要修改User Message的代码，重新new另一个类，如果系统中有一百个地方用到这个类，那我们这些地方都要全部修改，出现Bug的概率将大大增加，然后过了一阵子，项目经理又说我想换回以前的Dao类了……</p>
+<p>　　下面我们看看IOC设计的实现</p>
+<p>public interface UserDao{<br>  void addUser(String username);<br>}
+复制代码<br>public class UserDaoImpl implements UserDao{<br>    @Override<br>    public void addUser(String username)<br>{
+    System.out.println(“添加用户：”+username);<br>}  
+}<br>复制代码</p>
+<p>复制代码<br>public class UserMessage{    </p>
+<pre><code>private UserDao userDao;    
+
+//使用设值方式赋值    
+public void setUserDao(UserDao userDao) {    
+    this.userDao = userDao;    
+}    
+public void addUser(String userName, String password) {    
+
+    userDao.addUser(userName);    
+}    </code></pre><p>}   
+复制代码
+　　</p>
+<p>复制代码<br>public class test{<br>    public static void main(String[] args) {<br>        UserDao userDao =new UserDaoImpl();<br>        UserMessage userMessage=new UserMessage();<br>        userMessage.setUserDao(userDao);<br>    }<br>}
+复制代码</p>
+<p>　　我们仔细观察这里的做法， UserDao userDao=new UserDaoImpl()做法，这里就不得不提到了多态，即父类可以引用子类的方法，在这里形成的一个效果就是降低了User Message和UserDao的耦合度。因为UserMessage和UserDao之间仅存在做什么事（addUser方法）的联系，User Message并不了解UserDaoImpl的实现方式。当我们需要换另一种UserDao的实现类的话，我们只需要修改test类下的第一行的代码就可以了，UserMessage内部并不需要修改。</p>
+<p>　　再想想，读者可能会说不对啊，你说的控制反转和依赖注入需要向容器请求资源，这个容器并没有在上面提现出来啊，下面我们就讲解一下Spring 中是如何做到注入的。</p>
+<p>　　</p>
+<p>复制代码<br>  <!-- 使用spring管理对象的创建，还有对象的依赖关系 --><br><bean id="userManager" class="scau.zzf.service.UserMessage"><br>        <!-- (1)UserMessageImpl使用了userDao，Ioc是自动创建相应的UserDao实现，都是由容器管理--><br>        <!-- (2)在UserMessageImpl中提供构造函数，让spring将UserDao实现注入（DI）过来 --><br>        <!-- (3)让spring管理我们对象的创建和依赖关系，必须将依赖关系配置到spring的核心配置文件中 --><br>        <property name="userDao" ref="UserDao"></property><br>    <!-- 构造注入 --><br>    <!-- <constructor-arg ref="userDao"/>  --><br>    </bean><br><bean id="UserDao" class="scau.zzf.Dao.UserDao"></bean></p>
+    
+复制代码
+
+
+<p>　　首先我们需要装配Bean,即在Spring容器中将Bean进行配置后，然后返回Bean对象实例。我们可以通过XmlBeanFactory读取我们xml文件，从而获取相关的Bean信息。</p>
+<p>复制代码<br>public class test {<br>    public static void main(String[] args) throws Exception {<br>    BeanFactory factory=new XmlBeanFactory(new FileSystemResource(“src/appllication.xml”));<br>        UserMessage userMessage=(UserMessage)factory.getBean(“UserMessage”);<br>        userMessage.add(“德玛西亚”);</p>
+<pre><code>}</code></pre><p>}
+复制代码<br>　　在实际应用当中，我们并不会手动去读取Xml中的信息或者加载配置文件，Spring底层已经帮我做好了这些，也就是在实际应用当中，我们就只是需要发送一个请求而已，当然了解这么一个过程还是很有必要的。</p>
+<p>　　下面再简单讲解一下如何通过注解来实现注入。</p>
+<p>复制代码<br>@Configuration<br>public class UserConfig {<br>    @Bean<br>    public UserDao getUserDao(){<br>        return new UserDao();<br>    }<br>    @Bean<br>    public UserMessage getUserMessage(){<br>        return new UserMesssgae(getUserDao);<br>    }<br>}
+复制代码</p>
+<h2 id="Configuration的作用是使整个类成为一个配置类，-Bean注解会告诉Spring这个注解下的方法将会返回一个对象，这个对象要注册维Spring应用上下文的Bean。在默认情况下，Spring的Bean都是单例的，也就是再上面的例子当中，无论我们使用多少次getUserDao-，结果返回的对象至始至终都是相同的。关于JavaConfig的配置进一步相关说明，读者可以前往笔者的另一篇文章《更加优雅的配置SSH》中进行参考。"><a href="#Configuration的作用是使整个类成为一个配置类，-Bean注解会告诉Spring这个注解下的方法将会返回一个对象，这个对象要注册维Spring应用上下文的Bean。在默认情况下，Spring的Bean都是单例的，也就是再上面的例子当中，无论我们使用多少次getUserDao-，结果返回的对象至始至终都是相同的。关于JavaConfig的配置进一步相关说明，读者可以前往笔者的另一篇文章《更加优雅的配置SSH》中进行参考。" class="headerlink" title="@Configuration的作用是使整个类成为一个配置类，@Bean注解会告诉Spring这个注解下的方法将会返回一个对象，这个对象要注册维Spring应用上下文的Bean。在默认情况下，Spring的Bean都是单例的，也就是再上面的例子当中，无论我们使用多少次getUserDao()，结果返回的对象至始至终都是相同的。关于JavaConfig的配置进一步相关说明，读者可以前往笔者的另一篇文章《更加优雅的配置SSH》中进行参考。"></a>@Configuration的作用是使整个类成为一个配置类，@Bean注解会告诉Spring这个注解下的方法将会返回一个对象，这个对象要注册维Spring应用上下文的Bean。在默认情况下，Spring的Bean都是单例的，也就是再上面的例子当中，无论我们使用多少次getUserDao()，结果返回的对象至始至终都是相同的。关于JavaConfig的配置进一步相关说明，读者可以前往笔者的另一篇文章《更加优雅的配置SSH》中进行参考。</h2>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/xiami/1770409076.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuration的作用是使整个类成为一个配置类，-Bean注解会告诉Spring这个注解下的方法将会返回一个对象，这个对象要注册维Spring应用上下文的Bean。在默认情况下，Spring的Bean都是单例的，也就是再上面的例子当中，无论我们使用多少次getUserDao-，结果返回的对象至始至终都是相同的。关于JavaConfig的配置进一步相关说明，读者可以前往笔者的另一篇文章《更加优雅的配置SSH》中进行参考。"><span class="toc-number">1.</span> <span class="toc-text">@Configuration的作用是使整个类成为一个配置类，@Bean注解会告诉Spring这个注解下的方法将会返回一个对象，这个对象要注册维Spring应用上下文的Bean。在默认情况下，Spring的Bean都是单例的，也就是再上面的例子当中，无论我们使用多少次getUserDao()，结果返回的对象至始至终都是相同的。关于JavaConfig的配置进一步相关说明，读者可以前往笔者的另一篇文章《更加优雅的配置SSH》中进行参考。</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
