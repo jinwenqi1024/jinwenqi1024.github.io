@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>监听器、过滤器、拦截器的优先级顺序 - JinWenqi</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="java developer,这里主要是总结一下监听器、过滤器、拦截器的使用注意点和使用方法，还有就是三者之间的启动顺序。
+第一：监听器：Listener
+是servlet规范中定义的一种特殊类。
+用于监听servletCont,"> 
+    <meta name="author" content="JinWenqi"> 
+    <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">JinWenqi</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">监听器、过滤器、拦截器的优先级顺序</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">监听器、过滤器、拦截器的优先级顺序</h1>
+        <div class="stuff">
+            <span>三月 03, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>这里主要是总结一下监听器、过滤器、拦截器的使用注意点和使用方法，还有就是三者之间的启动顺序。</p>
+<p>第一：监听器：Listener</p>
+<p>是servlet规范中定义的一种特殊类。</p>
+<p>用于监听servletContext、HttpSession和servletRequest等域对象的创建和销毁事件。</p>
+<p>监听域对象的属性发生修改的事件。</p>
+<p>用于在事件发生前、发生后做一些必要的处理。</p>
+<p>用途：</p>
+<p>1、统计在线人数和在线用户</p>
+<p>2、系统启动时加载初始化信息</p>
+<p>3、统计网站访问量</p>
+<p>4、记录用户访问路径</p>
+<p>4、跟Spring结合</p>
+<p>实现：</p>
+<p>1、创建一个实现监听器接口的类</p>
+<p>2、配置web.xml进行注册（servlet2.5版本需要配置，servlet3.0版本可以用注解@WebListener）</p>
+<p>说明：</p>
+<p>1、一个Web.xml中可以配置多个监听器，监听器的启动顺序安装，配置顺序启动。</p>
+<p>2、servlet3.0中使用注解配置时，不能控制监听器的启动顺序。</p>
+<p>分类：</p>
+<p>按照监听对象划分：</p>
+<p>1、用于监听应用程序环境对象（servletContext）的事件监听器</p>
+<p>2、用于监听用户回话对象（HttpSession）的事件监听器</p>
+<p>3、用于监听请求消息对象（ServletRequest）的事件监听器</p>
+<p>按照监听事件划分：</p>
+<p>1、监听域对象自身的创建和销毁的事件监听器</p>
+<p>创建类并且实现以下接口</p>
+<p>servletContextListener</p>
+<p>方法：contextInitialized（）</p>
+<p>  contextDestroyed（）</p>
+<p>HttpSessionListener</p>
+<p>方法：sessionCreated（）</p>
+<p>  sessionDestroyed（）</p>
+<p>ServletRequestListener</p>
+<p>方法：requestInitialized（）</p>
+<p>  requestDestroyed（）</p>
+<p>每个接口中都有两个方法方法</p>
+<p>2、监听域对象中的属性的增加和删除的事件监听器</p>
+<p>创建类并且实现以下接口</p>
+<p>ServletContextAttributeListener</p>
+<p>方法：attributeAdded（）</p>
+<p>attributeRemoved（）</p>
+<p>attributeReplaced（）</p>
+<p>HttpSessionAttributeListener</p>
+<p>方法：attributeAdded（）</p>
+<p>attributeRemoved（）</p>
+<p>attributeReplaced（）</p>
+<p>ServletRequestAttributeListener</p>
+<p>方法：attributeAdded（）</p>
+<p>attributeRemoved（）</p>
+<p>attributeReplaced（）</p>
+<p>3、监听绑定到HttpSession域中的某个对象的状态的事件监听器</p>
+<p>实现两个接口</p>
+<p>HttpSessionBindingListener（）</p>
+<p>HttpSessionActivationListener（）</p>
+<p>列如：</p>
+<p>package com.shichun.common.listener;</p>
+<p>import java.io.Serializable;</p>
+<p>import javax.servlet.http.HttpSessionActivationListener;<br>import javax.servlet.http.HttpSessionBindingEvent;<br>import javax.servlet.http.HttpSessionBindingListener;<br>import javax.servlet.http.HttpSessionEvent;</p>
+<p>/**</p>
+<ul>
+<li><p>绑定和解除绑定的监听事件</p>
+</li>
+<li><p>钝化和活化监听事件</p>
+</li>
+<li><p>不需要在web.xml 中配置  一般都是实体类实现接口即可</p>
+</li>
+<li><p>@author zsc<br> *
+  */<br> public class User implements HttpSessionBindingListener,HttpSessionActivationListener,Serializable {</p>
+<p> private static final long serialVersionUID = 1624003797969315721L;</p>
+<p> private String username;</p>
+<p> private String password;</p>
+</li>
+</ul>
+<pre><code>/**
+ * 绑定时触发执行即：执行session.setAttribute(arg0, arg1)时触发;
+    */
+    @Override
+    public void valueBound(HttpSessionBindingEvent arg0) {
+
+
+}
+
+/**
+ * 解除绑定时触发执行 即：执行session.removeAttribute(arg0)时触发;
+    */
+    @Override
+    public void valueUnbound(HttpSessionBindingEvent arg0) {
+
+}
+
+/**
+ * 活化时触发执行
+    */
+    @Override
+    public void sessionDidActivate(HttpSessionEvent arg0) {
+
+
+}
+
+/**
+ * 钝化时触发执行
+    */
+    @Override
+    public void sessionWillPassivate(HttpSessionEvent arg0) {
+
+
+}
+
+
+public String getUsername() {
+    return username;
+}
+
+public void setUsername(String username) {
+    this.username = username;
+}
+
+public String getPassword() {
+    return password;
+}
+
+public void setPassword(String password) {
+    this.password = password;
+}</code></pre><p>}</p>
+<p>扩展：<br>Session对象创建时间：</p>
+<p>打开浏览器访问时，服务器端创建session对象</p>
+<p>Session对象销毁时间：</p>
+<p>1、关闭服务器</p>
+<p>2、关闭浏览器一段时候后，session会自动销毁</p>
+<p>3、用户退出,调用删除session方法</p>
+<p>4、不关闭浏览器，session超时</p>
+<p>在servlet3.0下监听器的用法</p>
+<p>使用注解@WebListener</p>
+<p>该注解用于将类声明为监听器，被@WebListener标注的类必须实现以下至少一个接口：</p>
+<p>ServletContextListener</p>
+<pre><code>ServletContextAttributeListener</code></pre><p>HttpSessionListener</p>
+<pre><code>          HttpSessionAttributeListener
+
+ServletRequestListener
+
+ServletRequestAttributeListener</code></pre><p>第二、过滤器：Filter</p>
+<p>第三、拦截器：Interceptor</p>
+<p>   拦截器一般配置在springMVC配置文件中。</p>
+<p>   拦截用户发送到服务器的请求，统一对某些功能的增强。</p>
+<p>   使用场景：一般解决一些共性问题（乱码问题，权限验证问题）</p>
+<p>实现：</p>
+<p>编写类实现接口org.springframework.web.servlet.HandlerInterceptor;</p>
+<p>在springMVC.xml中进行注册配置</p>
+<p>package com.shichun.common.interceptor;</p>
+<p>import javax.servlet.http.HttpServletRequest;<br>import javax.servlet.http.HttpServletResponse;</p>
+<p>import org.springframework.web.servlet.HandlerInterceptor;<br>import org.springframework.web.servlet.ModelAndView;</p>
+<p>/**</p>
+<ul>
+<li><p>编写拦截器  只需要实现接口  HandlerInterceptor</p>
+</li>
+<li></li>
+<li><p>@date 2017-09-20</p>
+</li>
+<li><p>@author zsc<br> *
+  */<br> public class FirstInterceptor implements HandlerInterceptor {</p>
+<p> /**</p>
+<ul>
+<li>调用handler之后执行<br> */<br> @Override<br> public void afterCompletion(HttpServletRequest arg0,HttpServletResponse arg1, Object arg2, Exception arg3)<pre><code>throws Exception {</code></pre> }</li>
+</ul>
+</li>
+</ul>
+<pre><code>/**
+ * 调用handler过程中执行
+    */
+    @Override
+    public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1,Object arg2, ModelAndView arg3)
+        throws Exception {
+    }
+
+/**
+ * 在调用handler之前调用
+ * true 不拦截;false 拦截
+    */
+    @Override
+    public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1,Object arg2) throws Exception {
+    arg0.setCharacterEncoding(&quot;utf-8&quot;);
+    //如果用户没有登录则禁止访问，跳转到登录页面
+    if(arg0.getSession().getAttribute(&quot;user&quot;)==null){
+        arg0.getRequestDispatcher(&quot;login.jsp&quot;).forward(arg0, arg1);
+        return false;
+    }
+    return true;
+    }</code></pre><p>}</p>
+<p>一个应用中配置多个拦截器：</p>
+<p>执行顺序</p>
+<p>拦截器与过滤器的区别：</p>
+<p>过滤器Filter依赖于Servlet容器，基于回调函数，过滤范围大。</p>
+<p>拦截器Interceptor依赖于框架容器，基于反射机制，只过滤请求。</p>
+<p>第四、启动顺序：</p>
+<p>监听器 &gt; 过滤器 &gt; 拦截器</p>
+<p>我是这样记忆的：接到上级命令，要求对电话进去监听，过滤出恐怖分子，然后，拦截他们的恐怖袭击行动。</p>
+<p>配置位置：</p>
+<p>监听器、过滤器一般配置在web.xml中，拦截器一般配置在springmvc.xml配置文件中</p>
+<hr>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/xiami/1770409076.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
