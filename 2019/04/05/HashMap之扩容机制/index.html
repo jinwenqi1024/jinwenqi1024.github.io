@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Archive: 2099</title>
+    <title>浅谈HashMap之扩容机制 - JinWenqi</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="java developer,"> 
+    <meta name="description" content="java developer,首先要了解HashMap的扩容过程，我们就得了解一些HashMap中的变量：
+
+Node&amp;lt;K,V&amp;gt;：链表节点，包含了key、value、hash、next指针四个元素 table：Nod,"> 
     <meta name="author" content="JinWenqi"> 
     <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -30,32 +32,79 @@
 <body class="loading">
     <span id="config-title" style="display:none">JinWenqi</span>
     <div id="loader"></div>
-    <div id="single" class="page">
-    <div id="top">
-        <a class="icon-left image-icon" href="javascript:history.back()"></a>
-    </div>
-    <div class="section">
-        <div class="article">
-            <div class="main">
-                <div class="content">
-                    <div class="timeline">
-                      <h2 class="timeline-title">归档: 16篇</h2>
-                      
-                        
-                          <h3 class="timeline-subtitle">2099</h3>
-                        
-                        <div class="timeline-item">
-                          <time>2099-01-01</time>
-                          <a target="_self" href="/2099/01/01/礼物/">礼物</a>
-                        </div>
-                      
-                    </div>
-                </div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">浅谈HashMap之扩容机制</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
             </div>
+            <div id="qr"></div>
         </div>
     </div>
+    <div class="scrollbar"></div>
 </div>
 
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">浅谈HashMap之扩容机制</h1>
+        <div class="stuff">
+            <span>四月 05, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>首先要了解HashMap的扩容过程，我们就得了解一些HashMap中的变量：</p>
+<blockquote>
+<p><strong>Node&lt;K,V&gt;：</strong>链表节点，包含了key、value、hash、next指针四个元素<br> <strong>table：</strong>Node&lt;K,V&gt;类型的数组，里面的元素是链表，用于存放HashMap元素的实体<br> <strong>size：</strong>记录了放入HashMap的元素个数<br> <strong>loadFactor：</strong>负载因子<br> <strong>threshold：</strong>扩容的阈值，决定了HashMap何时扩容，以及扩容后的大小，一般等于，等于 table * loadFactor</p>
+</blockquote>
+<p><strong>何时进行扩容？</strong><br> HashMap使用的是懒加载，构造完HashMap对象后，只要不进行put 方法插入元素之前，HashMap并不会去初始化或者扩容table。</p>
+<p>当首次调用put方法时，HashMap会发现table为空然后调用resize方法进行初始化<br> ，当添加完元素后，如果HashMap发现size（元素总数）大于threshold（阈值），则会调用resize方法进行扩容</p>
+<p><strong>扩容过程：</strong></p>
+<ul>
+<li>若threshold（阈值）不为空，table的首次初始化大小为阈值，否则初始化为缺省值大小16</li>
+<li>默认的负载因子大小为0.75，当一个map填满了75%的bucket时候，就会扩容，扩容后的table大小变为原来的两倍</li>
+<li>假设扩容前的table大小为2的N次方，有上述put方法解析可知，元素的table索引为其hash值的后N位确定</li>
+<li>扩容后的table大小即为2的N+1次方，则其中元素的table索引为其hash值的后N+1位确定，比原来多了一位</li>
+<li>重新调整map的大小，并将原来的对象放入新的bucket数组中。这个过程叫作rehashing</li>
+</ul>
+<p>因此，table中的元素只有两种情况：<br> 元素hash值第N+1位为0：不需要进行位置调整<br> 元素hash值第N+1位为1：调整至原索引的两倍位置<br> 扩容或初始化完成后，resize方法返回新的table</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/xiami/1770409076.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
 </body>
 <script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>

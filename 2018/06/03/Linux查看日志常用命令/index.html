@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Archive: 2099</title>
+    <title>Linux查看日志常用命令 - JinWenqi</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="java developer,"> 
+    <meta name="description" content="java developer,1.查看日志常用命令
+​    tail:  
+​       -n  是显示行号；相当于nl命令；例子如下：
+​            tail -100f test.log      实时监控1,"> 
     <meta name="author" content="JinWenqi"> 
     <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -30,32 +33,90 @@
 <body class="loading">
     <span id="config-title" style="display:none">JinWenqi</span>
     <div id="loader"></div>
-    <div id="single" class="page">
-    <div id="top">
-        <a class="icon-left image-icon" href="javascript:history.back()"></a>
-    </div>
-    <div class="section">
-        <div class="article">
-            <div class="main">
-                <div class="content">
-                    <div class="timeline">
-                      <h2 class="timeline-title">归档: 16篇</h2>
-                      
-                        
-                          <h3 class="timeline-subtitle">2099</h3>
-                        
-                        <div class="timeline-item">
-                          <time>2099-01-01</time>
-                          <a target="_self" href="/2099/01/01/礼物/">礼物</a>
-                        </div>
-                      
-                    </div>
-                </div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">Linux查看日志常用命令</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
             </div>
+            <div id="qr"></div>
         </div>
     </div>
+    <div class="scrollbar"></div>
 </div>
 
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">Linux查看日志常用命令</h1>
+        <div class="stuff">
+            <span>六月 03, 2018</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>1.查看日志常用命令</p>
+<p>​    tail:  </p>
+<p>​       -n  是显示行号；相当于nl命令；例子如下：</p>
+<p>​            <strong>tail -100f test.log      实时监控100行日志</strong></p>
+<p>​            tail  -n  10  test.log   查询日志尾部最后10行的日志;</p>
+<p>​            tail -n +10 test.log    查询10行之后的所有日志;</p>
+<p>​    head:  </p>
+<p>​        跟tail是相反的，tail是看后多少行日志；例子如下：</p>
+<p>​            head -n 10  test.log   查询日志文件中的头10行日志;</p>
+<p>​            head -n -10  test.log   查询日志文件除了最后10行的其他所有日志;</p>
+<p>​    cat： </p>
+<p>​        tac是倒序查看，是cat单词反写；例子如下：</p>
+<p>​            <strong>cat -n test.log |grep “debug”   查询关键字的日志</strong></p>
+<p>\2. 应用场景一：按行号查看—过滤出关键字附近的日志</p>
+<p>​     1）cat -n test.log |grep “debug”  得到关键日志的行号</p>
+<p>​     2）cat -n test.log |tail -n +92|head -n 20  选择关键字所在的中间一行. 然后查看这个关键字前10行和后10行的日志:</p>
+<p>​            tail -n +92表示查询92行之后的日志</p>
+<p>​            head -n 20 则表示在前面的查询结果里再查前20条记录</p>
+<p>\3. 应用场景二：根据日期查询日志</p>
+<p>​      sed -n ‘/2014-12-17 16:17:20/,/2014-12-17 16:17:36/p’  test.log</p>
+<p>​      特别说明:上面的两个日期必须是日志中打印出来的日志,否则无效；</p>
+<p>​                      先 grep ‘2014-12-17 16:17:20’ test.log 来确定日志中是否有该 时间点</p>
+<p>​    (1)使用more和less命令,</p>
+<p>​           如： cat -n test.log |grep “debug” |more     这样就分页打印了,通过点击空格键翻页</p>
+<p>​    (2)使用 &gt;xxx.txt 将其保存到文件中,到时可以拉下这个文件分析</p>
+<p>​            如：cat -n test.log |grep “debug”  &gt;debug.txt</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/xiami/1770409076.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
 </body>
 <script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
