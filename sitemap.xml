@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/06/02/%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84java%E9%9D%A2%E8%AF%95%E9%A2%98/</loc>
+    
+    <lastmod>2019-06-03T15:52:16.790Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2019/03/03/%E7%AE%80%E8%BF%B0Spring%E4%B8%AD-BeanFactory%E5%92%8CApplicationContext%E7%9A%84%E5%8C%BA%E5%88%AB/</loc>
     
     <lastmod>2019-06-03T15:37:32.581Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://yoursite.com/2018/06/03/Linux%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
     
     <lastmod>2019-06-03T15:36:26.936Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/06/03/%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84java%E9%9D%A2%E8%AF%95%E9%A2%98/</loc>
-    
-    <lastmod>2019-06-03T15:22:39.808Z</lastmod>
     
   </url>
   
