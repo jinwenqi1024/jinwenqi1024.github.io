@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>spring中的9种设计模式 - JinWenqi</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="java developer,前言设计模式作为工作学习中的枕边书，却时常处于勤说不用的尴尬境地，也不是我们时常忘记，只是一直没有记忆。Spring作为业界的经典框架，无论是在架构设计方面，还是在代码编写方面，都堪称行内典范。
+好,"> 
+    <meta name="author" content="JinWenqi"> 
+    <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">JinWenqi</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">spring中的9种设计模式</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">spring中的9种设计模式</h1>
+        <div class="stuff">
+            <span>六月 03, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>设计模式作为工作学习中的枕边书，却时常处于勤说不用的尴尬境地，也不是我们时常忘记，只是一直没有记忆。Spring作为业界的经典框架，无论是在架构设计方面，还是在代码编写方面，都堪称行内典范。</p>
+<p>好了，话不多说，开始今天的内容。spring中常用的设计模式达到九种，我们举例说明。</p>
+<p>以后再也不怕面试官问我：Spring中用了哪些设计模式了。</p>
+<h1 id="1简单工厂模式"><a href="#1简单工厂模式" class="headerlink" title="1简单工厂模式"></a>1<strong>简单工厂模式</strong></h1><p>又叫做静态工厂方法（StaticFactory Method）模式，但不属于23种GOF设计模式之一。 </p>
+<p>简单工厂模式的实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类。 </p>
+<p>spring中的BeanFactory就是简单工厂模式的体现，根据传入一个唯一的标识来获得bean对象，但是否是在传入参数后创建还是传入参数前创建这个要根据具体情况来定。如下配置，就是在 HelloItxxz 类中创建一个 itxxzBean。</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-abe93bf0bd7fb38d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/673/format/webp" alt="img"></p>
+<h1 id="2工厂方法模式"><a href="#2工厂方法模式" class="headerlink" title="2工厂方法模式"></a>2<strong>工厂方法模式</strong></h1><p>通常由应用程序直接使用new创建新的对象，为了将对象的创建和使用相分离，采用工厂模式,即应用程序将对象的创建及初始化职责交给工厂对象。</p>
+<p>一般情况下,应用程序有自己的工厂对象来创建bean.如果将应用程序自己的工厂对象交给Spring管理,那么Spring管理的就不是普通的bean,而是工厂Bean。</p>
+<p>就以工厂方法中的静态方法为例讲解一下：</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-5ff22aee448ef60a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/670/format/webp" alt="img"></p>
+<p>建一个config.xm配置文件，将其纳入Spring容器来管理,需要通过factory-method指定静态方法名称：</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-ab348c75be77b443.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/673/format/webp" alt="img"></p>
+<p>测试：</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-56561c3ff09ff633.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/667/format/webp" alt="img"></p>
+<h1 id="3单例模式"><a href="#3单例模式" class="headerlink" title="3单例模式"></a>3<strong>单例模式</strong></h1><p>保证一个类仅有一个实例，并提供一个访问它的全局访问点。</p>
+<p>spring中的单例模式完成了后半句话，即提供了全局的访问点BeanFactory。但没有从构造器级别去控制单例，这是因为spring管理的是是任意的java对象。</p>
+<p>核心提示点：Spring下默认的bean均为singleton，可以通过singleton=“true|false” 或者 scope=”?”来指定。</p>
+<h1 id="4适配器模式"><a href="#4适配器模式" class="headerlink" title="4适配器模式"></a>4<strong>适配器模式</strong></h1><p>在Spring的Aop中，使用的Advice（通知）来增强被代理类的功能。Spring实现这一AOP功能的原理就使用代理模式（1、JDK动态代理。2、CGLib字节码生成技术代理。）对类进行方法级别的切面增强，即，生成被代理类的代理类， 并在代理类的方法前，设置拦截器，通过执行拦截器重的内容增强了代理方法的功能，实现的面向切面编程。</p>
+<p>Adapter类接口：Target</p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-26ba96d0951420ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/675/format/webp" alt="img"></p>
+<h1 id="5包装器模式"><a href="#5包装器模式" class="headerlink" title="5包装器模式"></a>5<strong>包装器模式</strong></h1><p>在我们的项目中遇到这样一个问题：我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。我们以往在spring和hibernate框架中总是配置一个数据源，因而sessionFactory的dataSource属性总是指向这个数据源并且恒定不变，所有DAO在使用sessionFactory的时候都是通过这个数据源访问数据库。</p>
+<p>但是现在，由于项目的需要，我们的DAO在访问sessionFactory的时候都不得不在多个数据源中不断切换，问题就出现了：如何让sessionFactory在执行数据持久化的时候，根据客户的需求能够动态切换不同的数据源？我们能不能在spring的框架下通过少量修改得到解决？是否有什么设计模式可以利用呢？ </p>
+<p>首先想到在spring的applicationContext中配置所有的dataSource。这些dataSource可能是各种不同类型的，比如不同的数据库：Oracle、SQL Server、MySQL等，也可能是不同的数据源：比如apache 提供的org.apache.commons.dbcp.BasicDataSource、spring提供的org.springframework.jndi.JndiObjectFactoryBean等。然后sessionFactory根据客户的每次请求，将dataSource属性设置成不同的数据源，以到达切换数据源的目的。</p>
+<p>spring中用到的包装器模式在类名上有两种表现：一种是类名中含有Wrapper，另一种是类名中含有Decorator。基本上都是动态地给一个对象添加一些额外的职责。 </p>
+<h1 id="6代理模式"><a href="#6代理模式" class="headerlink" title="6代理模式"></a>6<strong>代理模式</strong></h1><p>为其他对象提供一种代理以控制对这个对象的访问。  从结构上来看和Decorator模式类似，但Proxy是控制，更像是一种对功能的限制，而Decorator是增加职责。 </p>
+<p>spring的Proxy模式在aop中有体现，比如JdkDynamicAopProxy和Cglib2AopProxy。 </p>
+<h1 id="7观察者模式"><a href="#7观察者模式" class="headerlink" title="7观察者模式"></a>7<strong>观察者模式</strong></h1><p>定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新。</p>
+<p>spring中Observer模式常用的地方是listener的实现。如ApplicationListener。 </p>
+<h1 id="8策略模式"><a href="#8策略模式" class="headerlink" title="8策略模式"></a>8<strong>策略模式</strong></h1><p>定义一系列的算法，把它们一个个封装起来，并且使它们可相互替换。本模式使得算法可独立于使用它的客户而变化。 </p>
+<p>spring中在实例化对象的时候用到Strategy模式</p>
+<p>在SimpleInstantiationStrategy中有如下代码说明了策略模式的使用情况： </p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-7ff2e76b8c625995?imageMogr2/auto-orient/strip%7CimageView2/2/w/865/format/webp" alt="img"></p>
+<h1 id="9模板方法模式"><a href="#9模板方法模式" class="headerlink" title="9模板方法模式"></a>9<strong>模板方法模式</strong></h1><p>定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。Template Method使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。</p>
+<p>Template Method模式一般是需要继承的。这里想要探讨另一种对Template Method的理解。spring中的JdbcTemplate，在用这个类时并不想去继承这个类，因为这个类的方法太多，但是我们还是想用到JdbcTemplate已有的稳定的、公用的数据库连接，那么我们怎么办呢？我们可以把变化的东西抽出来作为一个参数传入JdbcTemplate的方法中。但是变化的东西是一段代码，而且这段代码会用到JdbcTemplate中的变量。怎么办？那我们就用回调对象吧。</p>
+<p>在这个回调对象中定义一个操纵JdbcTemplate中变量的方法，我们去实现这个方法，就把变化的东西集中到这里了。然后我们再传入这个回调对象到JdbcTemplate，从而完成了调用。这可能是Template Method不需要继承的另一种实现方式。 </p>
+<p>以下是一个具体的例子：</p>
+<p>JdbcTemplate中的execute方法</p>
+<p> JdbcTemplate执行execute方法 </p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-71ba2e7daacc565f?imageMogr2/auto-orient/strip%7CimageView2/2/w/804/format/webp" alt="img"></p>
+<p><img src="//upload-images.jianshu.io/upload_images/11561958-2ca874b88bcb6a06?imageMogr2/auto-orient/strip%7CimageView2/2/w/804/format/webp" alt="img"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/xiami/1770409076.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1简单工厂模式"><span class="toc-number">2.</span> <span class="toc-text">1简单工厂模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2工厂方法模式"><span class="toc-number">3.</span> <span class="toc-text">2工厂方法模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3单例模式"><span class="toc-number">4.</span> <span class="toc-text">3单例模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4适配器模式"><span class="toc-number">5.</span> <span class="toc-text">4适配器模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5包装器模式"><span class="toc-number">6.</span> <span class="toc-text">5包装器模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6代理模式"><span class="toc-number">7.</span> <span class="toc-text">6代理模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7观察者模式"><span class="toc-number">8.</span> <span class="toc-text">7观察者模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8策略模式"><span class="toc-number">9.</span> <span class="toc-text">8策略模式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9模板方法模式"><span class="toc-number">10.</span> <span class="toc-text">9模板方法模式</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
