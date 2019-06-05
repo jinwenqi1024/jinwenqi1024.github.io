@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html lang class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>spring基于xml配置声明式事务管理步骤 - JinWenqi</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="java developer,1、首先编写一个实体类
+复制代码public class Dept {    private int deptId;    private String deptName;    public in,"> 
+    <meta name="author" content="JinWenqi"> 
+    <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">JinWenqi</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">spring基于xml配置声明式事务管理步骤</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">spring基于xml配置声明式事务管理步骤</h1>
+        <div class="stuff">
+            <span>四月 05, 2018</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>1、首先编写一个实体类</p>
+<p>复制代码<br>public class Dept {<br>    private int deptId;<br>    private String deptName;<br>    public int getDeptId() {<br>        return deptId;<br>    }<br>    public void setDeptId(int deptId) {<br>        this.deptId = deptId;<br>    }<br>    public String getDeptName() {<br>        return deptName;<br>    }<br>    public void setDeptName(String deptName) {<br>        this.deptName = deptName;<br>    }</p>
+<p>}
+复制代码<br>2、编写Dao层</p>
+<p>复制代码<br>public class DeptDao {<br>    // 容器注入JdbcTemplate对象<br>    private JdbcTemplate jdbcTemplate;<br>    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {<br>        this.jdbcTemplate = jdbcTemplate;<br>    }<br>    public void save(Dept dept){<br>        String sql = “insert into t_dept (deptName) values(?)”;<br>        jdbcTemplate.update(sql,dept.getDeptName());<br>    }<br>}
+复制代码<br>3、编写Server层</p>
+<p>复制代码<br>public class DeptService {<br>    // 容器注入dao对象<br>    private DeptDao deptDao;<br>    public void setDeptDao(DeptDao deptDao) {<br>        this.deptDao = deptDao;<br>    }<br>    public void save(Dept dept){<br>        deptDao.save(dept);<br>        int i = 1/0; // 异常： 整个Service.save()执行成功的要回滚<br>        // 第二次调用<br>        deptDao.save(dept);<br>    }<br>}
+复制代码<br>4、配置bean.xml文件</p>
+<p>　　4.1加入tx声明</p>
+<p>xmlns:tx=”<a href="http://www.springframework.org/schema/tx&quot;" target="_blank" rel="noopener">http://www.springframework.org/schema/tx&quot;</a><br>　　4.2加入tx约束</p>
+<p><a href="http://www.springframework.org/schema/tx" target="_blank" rel="noopener">http://www.springframework.org/schema/tx</a><br><a href="http://www.springframework.org/schema/tx/spring-tx.xsd" target="_blank" rel="noopener">http://www.springframework.org/schema/tx/spring-tx.xsd</a><br>　　4.3编写C3P0连接池</p>
+<p>复制代码<br>    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"><br>        <property name="driverClass" value="com.mysql.jdbc.Driver"></property><br>        <property name="jdbcUrl" value="jdbc:mysql:///hib_demo"></property><br>        <property name="user" value="root"></property><br>        <property name="password" value="root"></property><br>        <property name="initialPoolSize" value="3"></property><br>        <property name="maxPoolSize" value="10"></property><br>        <property name="maxStatements" value="100"></property><br>        <property name="acquireIncrement" value="2"></property><br>    </bean><br>复制代码<br>　　4.4编写JdbcTemplate工具类实例</p>
+<pre><code>&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;</code></pre><p>　　4.5编写dao实例和service实例</p>
+<pre><code>&lt;bean id=&quot;deptDao&quot; class=&quot;包名.DeptDao&quot;&gt;
+    &lt;property name=&quot;jdbcTemplate&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+&lt;bean id=&quot;deptService&quot; class=&quot;包名.DeptService&quot;&gt;
+    &lt;property name=&quot;deptDao&quot; ref=&quot;deptDao&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;</code></pre><p>　　4.6Spring声明式事务管理配置</p>
+<p>复制代码<br>    <!-- 配置事务管理器类 --><br>    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"><br>        <property name="dataSource" ref="dataSource"></property><br>    </bean></p>
+<pre><code>&lt;!-- 配置事务增强(如果管理事务?) --&gt;
+&lt;tx:advice id=&quot;txAdvice&quot; transaction-manager=&quot;txManager&quot;&gt;
+    &lt;tx:attributes&gt;
+        &lt;tx:method name=&quot;*&quot; read-only=&quot;false&quot;/&gt;
+    &lt;/tx:attributes&gt;
+&lt;/tx:advice&gt;
+
+&lt;!-- Aop配置： 拦截哪些方法(切入点表表达式) + 应用上面的事务增强配置 --&gt;
+&lt;aop:config&gt;
+    &lt;aop:pointcut expression=&quot;execution(* cn.itcast.a_tx.DeptService.save(..))&quot; id=&quot;pt&quot;/&gt;
+    &lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut-ref=&quot;pt&quot;/&gt;
+&lt;/aop:config&gt;</code></pre><p>复制代码<br>　　4.7完整的bean.xml配置</p>
+<p>复制代码<br><?xml version="1.0" encoding="UTF-8"?><br><beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemalocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/aop
+         http://www.springframework.org/schema/aop/spring-aop.xsd
+         http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx.xsd"></beans></p>
+<pre><code>&lt;!-- 1. 数据源对象: C3P0连接池 --&gt;
+&lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+    &lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql:///hib_demo&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;user&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;password&quot; value=&quot;root&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;initialPoolSize&quot; value=&quot;3&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;maxPoolSize&quot; value=&quot;10&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;maxStatements&quot; value=&quot;100&quot;&gt;&lt;/property&gt;
+    &lt;property name=&quot;acquireIncrement&quot; value=&quot;2&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- 2. JdbcTemplate工具类实例 --&gt;
+&lt;bean id=&quot;jdbcTemplate&quot; class=&quot;org.springframework.jdbc.core.JdbcTemplate&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- 3. dao实例 --&gt;
+&lt;bean id=&quot;deptDao&quot; class=&quot;包名.DeptDao&quot;&gt;
+    &lt;property name=&quot;jdbcTemplate&quot; ref=&quot;jdbcTemplate&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- 4. service实例 --&gt;
+&lt;bean id=&quot;deptService&quot; class=&quot;包名.DeptService&quot;&gt;
+    &lt;property name=&quot;deptDao&quot; ref=&quot;deptDao&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- #############5. Spring声明式事务管理配置############### --&gt;
+&lt;!-- 5.1 配置事务管理器类 --&gt;
+&lt;bean id=&quot;txManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;
+    &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- 5.2 配置事务增强(如果管理事务?) --&gt;
+&lt;tx:advice id=&quot;txAdvice&quot; transaction-manager=&quot;txManager&quot;&gt;
+    &lt;tx:attributes&gt;
+        &lt;tx:method name=&quot;*&quot; read-only=&quot;false&quot;/&gt;
+    &lt;/tx:attributes&gt;
+&lt;/tx:advice&gt;
+
+&lt;!-- 5.3 Aop配置： 拦截哪些方法(切入点表表达式) + 应用上面的事务增强配置 --&gt;
+&lt;aop:config&gt;
+    &lt;aop:pointcut expression=&quot;execution(* cn.itcast.a_tx.DeptService.save(..))&quot; id=&quot;pt&quot;/&gt;
+    &lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut-ref=&quot;pt&quot;/&gt;
+&lt;/aop:config&gt;</code></pre>      
+复制代码
+5.测试类
+
+<p>复制代码<br>public class App {</p>
+<pre><code>public void testApp() throws Exception {
+    //容器对象
+    ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;包名/bean.xml&quot;);
+    // 模拟数据
+    Dept dept = new Dept();
+    dept.setDeptName(&quot;测试： 开发部&quot;);
+    DeptService deptService = (DeptService) ac.getBean(&quot;deptService&quot;);
+    deptService.save(dept);
+}</code></pre><p>}</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/163/5146554.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
