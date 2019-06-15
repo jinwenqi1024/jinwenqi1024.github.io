@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang class="loading">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>mysql定位慢查询方法 - JinWenqi</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate">
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="java developer, mysql慢查询日志对于跟踪有问题的查询非常有用，可以分析出代码实现中耗费资源的sql语句，对我们程序的优化有很高的参考。本篇主要将慢查询日志的开启，日志分析，这也是优化SQL程序的一般步骤中至关,"> 
+    <meta name="author" content="JinWenqi"> 
+    <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <link rel="stylesheet" href="/css/diaspora.css">
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads" src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+</head>
+</html>
+<body class="loading">
+    <span id="config-title" style="display:none">JinWenqi</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="icon-home image-icon" href="javascript:;" data-url="http://www.jinwenqi.xyz"></a>
+    <div title="播放/暂停" class="icon-play"></div>
+    <h3 class="subtitle">mysql定位慢查询方法</h3>
+    <div class="social">
+        <!--<div class="like-icon">-->
+            <!--<a href="javascript:;" class="likeThis active"><span class="icon-like"></span><span class="count">76</span></a>-->
+        <!--</div>-->
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class="main">
+        <h1 class="title">mysql定位慢查询方法</h1>
+        <div class="stuff">
+            <span>一月 15, 2019</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p> mysql慢查询日志对于跟踪有问题的查询非常有用，可以分析出代码实现中耗费资源的sql语句，对我们程序的优化有很高的参考。本篇主要将慢查询日志的开启，日志分析，这也是优化SQL程序的一般步骤中至关重要的一步。    1.mysql慢查询日志            </p>
+<p>打开mysql的慢查询日志很简单,只需要在mysql的配置文件里(windows系统是my.ini,linux系统是my.cnf)的[mysqld]下面加上 </p>
+<p> Java代码 </p>
+<ol>
+<li><p>log-slow-queries=mysql_slow.log  </p>
+</li>
+<li><p>long_query_time=3  </p>
+<p>其中log-slow-queries为日志的文件名，可以指定目录，如log-slow-queries=D:\mysql_slow.log;  long_query_time为定义多长的查询我们定义为慢查询，并记录在log-slow-queries  指定的文件中，在这里我们定义超过3秒的查询进行记录。 配置完成以后重启Mysql服务器，执行show variables like  ‘%slow%’;查看慢查询日志是否开启，如果slow_query_log和log_slow_queries显示为on，那说明服务器的慢查询日志已经开启了。如下显示： </p>
+<p>Java代码</p>
+</li>
+<li><p>mysql&gt; show variables like ‘%slow%’;  </p>
+</li>
+<li><p>+———————+—————-+  </p>
+</li>
+<li><p>| Variable_name       | Value          |  </p>
+</li>
+<li><p>+———————+—————-+  </p>
+</li>
+<li><p>| log_slow_queries    | ON             |  </p>
+</li>
+<li><p>| slow_launch_time    | 2              |  </p>
+</li>
+<li><p>| slow_query_log      | ON             |  </p>
+</li>
+<li><p>| slow_query_log_file | mysql_slow.log |  </p>
+</li>
+<li><p>+———————+—————-+  </p>
+</li>
+<li><p>4 rows in set (0.00 sec)  </p>
+<p>slow_launch_time跟慢查询日志没有任何关系, 它代表的是thread create的一个阈值，如果要看 long_query_time，可以用 </p>
+<p>Java代码 </p>
+</li>
+<li><p>mysql&gt; show variables like ‘%long%’;  </p>
+</li>
+<li><p>+—————–+———-+  </p>
+</li>
+<li><p>| Variable_name   | Value    |  </p>
+</li>
+<li><p>+—————–+———-+  </p>
+</li>
+<li><p>| long_query_time | 3.000000 |  </p>
+</li>
+<li><p>+—————–+———-+  </p>
+</li>
+<li><p>1 row in set (0.00 sec)  </p>
+<p>2.mysql慢查询日志分析              建表勿要给text加上索引，否则可能出现不了超过3秒的查询，数据表填充了4194304条数据。 </p>
+<p>我们来执行一个超过3秒的查询，如下： </p>
+<p>Java代码 </p>
+</li>
+<li><p>​     mysql&gt; select * from wei where text=’orange’;  </p>
+</li>
+<li><p>+———+——–+  </p>
+</li>
+<li><p>| id      | text   |  </p>
+</li>
+<li><p>+———+——–+  </p>
+</li>
+<li><p>| 4103519 | orange |  </p>
+</li>
+<li><p>+———+——–+  </p>
+<p>1 row in set (3.79 sec)  再执行一个超过3秒的和一个没有超过3秒的： </p>
+<p>Java代码 </p>
+</li>
+<li><p>mysql&gt; select * from wei where text=’xishizhaohua’;  </p>
+</li>
+<li><p>Empty set (3.82 sec)  </p>
+<p>Java代码 </p>
+</li>
+<li><p>[mysql&gt; select * from wei where id=4564;  </p>
+</li>
+<li><p>+——+——————–+  </p>
+</li>
+<li><p>| id   | text               |  </p>
+</li>
+<li><p>+——+——————–+  </p>
+</li>
+<li><p>| 4564 | yyyyyyyyyyyyyyyyyy |  </p>
+</li>
+<li><p>+——+——————–+  </p>
+</li>
+<li><p>1 row in set (0.02 sec)  </p>
+<p>可以通过下面的命令查看现在这个session有多少个慢查询： </p>
+</li>
+</ol>
+<p>mysql&gt;show status like ‘%slow%’</p>
+<p>+——+——————–+  </p>
+<p>Variable_name       |  value</p>
+<p>+——+——————–+  </p>
+<p> Slow_launch_threads | 0</p>
+<p> Slow_queries              | 2</p>
+<p> +——+——————–+  </p>
+<p>2 rows in set (0.00sec)</p>
+<p>现在我们可以查看mysql_slow.log（win7默认在C:\ProgramData\MySQL\MySQL Server<br>5.1\data下面），里边内容如下，内容比较明了，包括查询花费的语句及时间，还包括查询时的时间戳等信息，其中Rows_examined为检查的行数，对我们优化也很有帮助</p>
+<h1 id="Time-121017-17-38-54"><a href="#Time-121017-17-38-54" class="headerlink" title="Time: 121017 17:38:54"></a>Time: 121017 17:38:54</h1><h1 id="User-Host-root-root-localhost-127-0-0-1"><a href="#User-Host-root-root-localhost-127-0-0-1" class="headerlink" title="User@Host: root[root] @ localhost [127.0.0.1]"></a>User@Host: root[root] @ localhost [127.0.0.1]</h1><h1 id="Query-time-3-794217-Lock-time-0-000000-Rows-sent-1-Rows-examined-4194304"><a href="#Query-time-3-794217-Lock-time-0-000000-Rows-sent-1-Rows-examined-4194304" class="headerlink" title="Query_time: 3.794217 Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 4194304"></a>Query_time: 3.794217 Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 4194304</h1><p>SET timestamp=1350466734;<br>select * from wei where text=’orange’;</p>
+<h1 id="Time-121017-17-46-22"><a href="#Time-121017-17-46-22" class="headerlink" title="Time: 121017 17:46:22"></a>Time: 121017 17:46:22</h1><h1 id="User-Host-root-root-localhost-127-0-0-1-1"><a href="#User-Host-root-root-localhost-127-0-0-1-1" class="headerlink" title="User@Host: root[root] @ localhost [127.0.0.1]"></a>User@Host: root[root] @ localhost [127.0.0.1]</h1><h1 id="Query-time-3-819219-Lock-time-0-000000-Rows-sent-0-Rows-examined-4194304"><a href="#Query-time-3-819219-Lock-time-0-000000-Rows-sent-0-Rows-examined-4194304" class="headerlink" title="Query_time: 3.819219  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 4194304"></a>Query_time: 3.819219  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 4194304</h1><p>SET timestamp=1350467182;<br>select * from wei where text=’xishizhaohua’;</p>
+<p>3.优化            </p>
+<p>其实定位到了慢查询语句就已经完成了一大不了，执行explain或者desc命令查看慢查询语句，如下图： </p>
+<p>mysql&gt;desc select * from wei where text=’xishizhaohua’\G<br><strong><strong><strong><strong>****</strong></strong></strong></strong>1.row<strong><strong><strong><strong><strong>****</strong></strong></strong></strong></strong><br>id:1<br>slect_type:simple<br>table:wei<br>type:all(代表扫描了整张表)<br>possible_keys:Null<br>key:Null(代表没有建索引)<br>key_len:Null<br>ref:Null<br>rows:4193519<br>Extra:Using where<br>1 row in set (0.00sec)</p>
+<p>Java代码  </p>
+<ol>
+<li>mysql&gt; create index text_index on wei(text);  </li>
+<li>Query OK, 4194304 rows affected (1 min 58.07 sec)  </li>
+<li>Records: 4194304  Duplicates: 0  Warnings: 0  </li>
+</ol>
+<p>Java代码  </p>
+<ol>
+<li>mysql&gt; select * from wei where text=’orange’;  </li>
+<li>+———+——–+  </li>
+<li>| id      | text   |  </li>
+<li>+———+——–+  </li>
+<li>| 4103519 | orange |  </li>
+<li>+———+——–+  </li>
+<li>1 row in set (0.33 sec)  </li>
+</ol>
+<p>Java代码  </p>
+<ol>
+<li>mysql&gt; select * from wei where text=’xishizhaohua’;  </li>
+<li>Empty set (0.01 sec)  </li>
+</ol>
+<hr>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src>
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        <li title="0" data-url="https://link.hhtjim.com/163/5146554.mp3"></li>
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link" data-ae="false" data-ci data-cs data-r data-o data-a data-d="false">查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Time-121017-17-38-54"><span class="toc-number">1.</span> <span class="toc-text">Time: 121017 17:38:54</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#User-Host-root-root-localhost-127-0-0-1"><span class="toc-number">2.</span> <span class="toc-text">User@Host: root[root] @ localhost [127.0.0.1]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Query-time-3-794217-Lock-time-0-000000-Rows-sent-1-Rows-examined-4194304"><span class="toc-number">3.</span> <span class="toc-text">Query_time: 3.794217 Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 4194304</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Time-121017-17-46-22"><span class="toc-number">4.</span> <span class="toc-text">Time: 121017 17:46:22</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#User-Host-root-root-localhost-127-0-0-1-1"><span class="toc-number">5.</span> <span class="toc-text">User@Host: root[root] @ localhost [127.0.0.1]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Query-time-3-819219-Lock-time-0-000000-Rows-sent-0-Rows-examined-4194304"><span class="toc-number">6.</span> <span class="toc-text">Query_time: 3.819219  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 4194304</span></a></li></ol>
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/diaspora.js"></script>
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+</html>
