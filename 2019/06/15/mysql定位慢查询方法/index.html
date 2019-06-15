@@ -10,14 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate">
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="java developer,Java代码  
-
-log-slow-queries=mysql_slow.log  
-long_query_time=3  
-
-Java代码  
-
-mysql&amp;gt; show variables,"> 
+    <meta name="description" content="java developer, mysql慢查询日志对于跟踪有问题的查询非常有用，可以分析出代码实现中耗费资源的sql语句，对我们程序的优化有很高的参考。本篇主要将慢查询日志的开启，日志分析，这也是优化SQL程序的一般步骤中至关,"> 
     <meta name="author" content="JinWenqi"> 
     <link rel="alternative" href="atom.xml" title="JinWenqi" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -67,71 +60,111 @@ mysql&amp;gt; show variables,">
 
         </div>
         <div class="content markdown">
-            <p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
+            <p> mysql慢查询日志对于跟踪有问题的查询非常有用，可以分析出代码实现中耗费资源的sql语句，对我们程序的优化有很高的参考。本篇主要将慢查询日志的开启，日志分析，这也是优化SQL程序的一般步骤中至关重要的一步。    1.mysql慢查询日志            </p>
+<p>打开mysql的慢查询日志很简单,只需要在mysql的配置文件里(windows系统是my.ini,linux系统是my.cnf)的[mysqld]下面加上 </p>
+<p> Java代码 </p>
 <ol>
-<li>log-slow-queries=mysql_slow.log  </li>
-<li>long_query_time=3  </li>
+<li><p>log-slow-queries=mysql_slow.log  </p>
+</li>
+<li><p>long_query_time=3  </p>
+<p>其中log-slow-queries为日志的文件名，可以指定目录，如log-slow-queries=D:\mysql_slow.log;  long_query_time为定义多长的查询我们定义为慢查询，并记录在log-slow-queries  指定的文件中，在这里我们定义超过3秒的查询进行记录。 配置完成以后重启Mysql服务器，执行show variables like  ‘%slow%’;查看慢查询日志是否开启，如果slow_query_log和log_slow_queries显示为on，那说明服务器的慢查询日志已经开启了。如下显示： </p>
+<p>Java代码</p>
+</li>
+<li><p>mysql&gt; show variables like ‘%slow%’;  </p>
+</li>
+<li><p>+———————+—————-+  </p>
+</li>
+<li><p>| Variable_name       | Value          |  </p>
+</li>
+<li><p>+———————+—————-+  </p>
+</li>
+<li><p>| log_slow_queries    | ON             |  </p>
+</li>
+<li><p>| slow_launch_time    | 2              |  </p>
+</li>
+<li><p>| slow_query_log      | ON             |  </p>
+</li>
+<li><p>| slow_query_log_file | mysql_slow.log |  </p>
+</li>
+<li><p>+———————+—————-+  </p>
+</li>
+<li><p>4 rows in set (0.00 sec)  </p>
+<p>slow_launch_time跟慢查询日志没有任何关系, 它代表的是thread create的一个阈值，如果要看 long_query_time，可以用 </p>
+<p>Java代码 </p>
+</li>
+<li><p>mysql&gt; show variables like ‘%long%’;  </p>
+</li>
+<li><p>+—————–+———-+  </p>
+</li>
+<li><p>| Variable_name   | Value    |  </p>
+</li>
+<li><p>+—————–+———-+  </p>
+</li>
+<li><p>| long_query_time | 3.000000 |  </p>
+</li>
+<li><p>+—————–+———-+  </p>
+</li>
+<li><p>1 row in set (0.00 sec)  </p>
+<p>2.mysql慢查询日志分析              建表勿要给text加上索引，否则可能出现不了超过3秒的查询，数据表填充了4194304条数据。 </p>
+<p>我们来执行一个超过3秒的查询，如下： </p>
+<p>Java代码 </p>
+</li>
+<li><p>​     mysql&gt; select * from wei where text=’orange’;  </p>
+</li>
+<li><p>+———+——–+  </p>
+</li>
+<li><p>| id      | text   |  </p>
+</li>
+<li><p>+———+——–+  </p>
+</li>
+<li><p>| 4103519 | orange |  </p>
+</li>
+<li><p>+———+——–+  </p>
+<p>1 row in set (3.79 sec)  再执行一个超过3秒的和一个没有超过3秒的： </p>
+<p>Java代码 </p>
+</li>
+<li><p>mysql&gt; select * from wei where text=’xishizhaohua’;  </p>
+</li>
+<li><p>Empty set (3.82 sec)  </p>
+<p>Java代码 </p>
+</li>
+<li><p>[mysql&gt; select * from wei where id=4564;  </p>
+</li>
+<li><p>+——+——————–+  </p>
+</li>
+<li><p>| id   | text               |  </p>
+</li>
+<li><p>+——+——————–+  </p>
+</li>
+<li><p>| 4564 | yyyyyyyyyyyyyyyyyy |  </p>
+</li>
+<li><p>+——+——————–+  </p>
+</li>
+<li><p>1 row in set (0.02 sec)  </p>
+<p>可以通过下面的命令查看现在这个session有多少个慢查询： </p>
+</li>
 </ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
-<ol>
-<li>mysql&gt; show variables like ‘%slow%’;  </li>
-<li>+———————+—————-+  </li>
-<li>| Variable_name       | Value          |  </li>
-<li>+———————+—————-+  </li>
-<li>| log_slow_queries    | ON             |  </li>
-<li>| slow_launch_time    | 2              |  </li>
-<li>| slow_query_log      | ON             |  </li>
-<li>| slow_query_log_file | mysql_slow.log |  </li>
-<li>+———————+—————-+  </li>
-<li>4 rows in set (0.00 sec)  </li>
-</ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
-<ol>
-<li>mysql&gt; show variables like ‘%long%’;  </li>
-<li>+—————–+———-+  </li>
-<li>| Variable_name   | Value    |  </li>
-<li>+—————–+———-+  </li>
-<li>| long_query_time | 3.000000 |  </li>
-<li>+—————–+———-+  </li>
-<li>1 row in set (0.00 sec)  </li>
-</ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
-<ol>
-<li>​     mysql&gt; select * from wei where text=’orange’;  </li>
-<li>+———+——–+  </li>
-<li>| id      | text   |  </li>
-<li>+———+——–+  </li>
-<li>| 4103519 | orange |  </li>
-<li>+———+——–+  </li>
-</ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
-<ol>
-<li>mysql&gt; select * from wei where text=’xishizhaohua’;  </li>
-<li>Empty set (3.82 sec)  </li>
-</ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
-<ol>
-<li>[mysql&gt; select * from wei where id=4564;  </li>
-<li>+——+——————–+  </li>
-<li>| id   | text               |  </li>
-<li>+——+——————–+  </li>
-<li>| 4564 | yyyyyyyyyyyyyyyyyy |  </li>
-<li>+——+——————–+  </li>
-<li>1 row in set (0.02 sec)  </li>
-</ol>
-<p>Query_time: 3.794217 </p>
-<p>Rows_examined: 4194304</p>
-<p>select * from wei where text=’orange’;</p>
-<p>Query_time: 3.819219</p>
-<p>Rows_examined: 4194304</p>
-<p>select * from wei where text=’xishizhaohua’;</p>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
+<p>mysql&gt;show status like ‘%slow%’</p>
+<p>+——+——————–+  </p>
+<p>Variable_name       |  value</p>
+<p>+——+——————–+  </p>
+<p> Slow_launch_threads | 0</p>
+<p> Slow_queries              | 2</p>
+<p> +——+——————–+  </p>
+<p>2 rows in set (0.00sec)</p>
+<p>现在我们可以查看mysql_slow.log（win7默认在C:\ProgramData\MySQL\MySQL Server<br>5.1\data下面），里边内容如下，内容比较明了，包括查询花费的语句及时间，还包括查询时的时间戳等信息，其中Rows_examined为检查的行数，对我们优化也很有帮助</p>
+<h1 id="Time-121017-17-38-54"><a href="#Time-121017-17-38-54" class="headerlink" title="Time: 121017 17:38:54"></a>Time: 121017 17:38:54</h1><h1 id="User-Host-root-root-localhost-127-0-0-1"><a href="#User-Host-root-root-localhost-127-0-0-1" class="headerlink" title="User@Host: root[root] @ localhost [127.0.0.1]"></a>User@Host: root[root] @ localhost [127.0.0.1]</h1><h1 id="Query-time-3-794217-Lock-time-0-000000-Rows-sent-1-Rows-examined-4194304"><a href="#Query-time-3-794217-Lock-time-0-000000-Rows-sent-1-Rows-examined-4194304" class="headerlink" title="Query_time: 3.794217 Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 4194304"></a>Query_time: 3.794217 Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 4194304</h1><p>SET timestamp=1350466734;<br>select * from wei where text=’orange’;</p>
+<h1 id="Time-121017-17-46-22"><a href="#Time-121017-17-46-22" class="headerlink" title="Time: 121017 17:46:22"></a>Time: 121017 17:46:22</h1><h1 id="User-Host-root-root-localhost-127-0-0-1-1"><a href="#User-Host-root-root-localhost-127-0-0-1-1" class="headerlink" title="User@Host: root[root] @ localhost [127.0.0.1]"></a>User@Host: root[root] @ localhost [127.0.0.1]</h1><h1 id="Query-time-3-819219-Lock-time-0-000000-Rows-sent-0-Rows-examined-4194304"><a href="#Query-time-3-819219-Lock-time-0-000000-Rows-sent-0-Rows-examined-4194304" class="headerlink" title="Query_time: 3.819219  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 4194304"></a>Query_time: 3.819219  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 4194304</h1><p>SET timestamp=1350467182;<br>select * from wei where text=’xishizhaohua’;</p>
+<p>3.优化            </p>
+<p>其实定位到了慢查询语句就已经完成了一大不了，执行explain或者desc命令查看慢查询语句，如下图： </p>
+<p><img src="C:%5CUsers%5CAdministrator%5CDesktop%5C1.png" alt></p>
+<p>Java代码  </p>
 <ol>
 <li>mysql&gt; create index text_index on wei(text);  </li>
 <li>Query OK, 4194304 rows affected (1 min 58.07 sec)  </li>
 <li>Records: 4194304  Duplicates: 0  Warnings: 0  </li>
 </ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
+<p>Java代码  </p>
 <ol>
 <li>mysql&gt; select * from wei where text=’orange’;  </li>
 <li>+———+——–+  </li>
@@ -141,7 +174,7 @@ mysql&amp;gt; show variables,">
 <li>+———+——–+  </li>
 <li>1 row in set (0.33 sec)  </li>
 </ol>
-<p>Java代码  <a href="javascript:void()" target="_blank" rel="noopener"><img src="https://orangeholic.iteye.com/images/icon_star.png" alt="收藏代码"></a></p>
+<p>Java代码  </p>
 <ol>
 <li>mysql&gt; select * from wei where text=’xishizhaohua’;  </li>
 <li>Empty set (0.01 sec)  </li>
@@ -167,7 +200,7 @@ mysql&amp;gt; show variables,">
     </div>
     
         <div class="side">
-            
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Time-121017-17-38-54"><span class="toc-number">1.</span> <span class="toc-text">Time: 121017 17:38:54</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#User-Host-root-root-localhost-127-0-0-1"><span class="toc-number">2.</span> <span class="toc-text">User@Host: root[root] @ localhost [127.0.0.1]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Query-time-3-794217-Lock-time-0-000000-Rows-sent-1-Rows-examined-4194304"><span class="toc-number">3.</span> <span class="toc-text">Query_time: 3.794217 Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 4194304</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Time-121017-17-46-22"><span class="toc-number">4.</span> <span class="toc-text">Time: 121017 17:46:22</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#User-Host-root-root-localhost-127-0-0-1-1"><span class="toc-number">5.</span> <span class="toc-text">User@Host: root[root] @ localhost [127.0.0.1]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Query-time-3-819219-Lock-time-0-000000-Rows-sent-0-Rows-examined-4194304"><span class="toc-number">6.</span> <span class="toc-text">Query_time: 3.819219  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 4194304</span></a></li></ol>
         </div>
     
 </div>
